@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ljx网络安全验证</title>
+  <style>
+    body {
+      background-image: url('https://Ljxnbnb.github.io/Ljx/hhh/2023122921141720.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: bold;
+      color: #333;
+      background-size: cover;
+    }
+
+    .container {
+      text-align: center;
+      margin-top: 20%;
+    }
+    
+    h1 {
+      font-size: 36px;
+      color: #fff;
+      text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    label {
+      display: block;
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    
+    input {
+      padding: 15px;
+      font-size: 24px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 24px;
+      color: #fff;
+      background-color: #007bff; /* 蓝色 */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3; /* 深蓝色 */
+    }
+    
+    @media (max-width: 600px) {
+      body {
+        background-image: url('https://Ljxnbnb.github.io/Ljx/hhh/2023122921141720.jpg');
+      }
+      
+      label {
+        font-size: 24px;
+      }
+
+      input {
+        font-size: 18px;
+      }
+
+      button {
+        font-size: 18px;
+        padding: 8px 16px;
+      }
+    }
+    .question-label {
+  color: #ff00ff; /* 靓丽的颜色，例如紫色 */
+  animation: rainbow 1s linear infinite;
+
+}
+
+@keyframes rainbow {
+  0% {
+    color: #ff00ff;
+  }
+  14% {
+    color: #00ff00;
+  }
+  28% {
+    color: #0000ff;
+  }
+  42% {
+    color: #ffff00;
+  }
+  57% {
+    color: #ff0000;
+  }
+  71% {
+    color: #00ffff;
+  }
+  85% {
+    color: #ff8000;
+  }
+  100% {
+    color: #ff00ff;
+  }
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.container {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  flex-grow: 1;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>输入答案后跳转</h1>
+    <h1>想做同款可以加微</h1>
+    <form id="verification-form">
+      <label id="question-label" class="question-label" for="answer">请回答下面的算术题：</label>
+      <input type="text" id="answer" required>
+      <br>
+      <button type="submit">提交</button>
+    </form>
+  </div>
+
+  <script>
+    var question = null; // 存储当前题目
+    
+    // 生成加减法算术题
+    function generateQuestion() {
+      var num1 = Math.floor(Math.random() * 10) + 1;
+      var num2 = Math.floor(Math.random() * 10) + 1;
+      var operator = Math.random() < 0.5 ? '+' : '-';
+      var questionText = num1 + operator + num2;
+      var answer = operator === '+' ? num1 + num2 : num1 - num2;
+
+      return {
+        question: questionText,
+        answer: answer
+      };
+    }
+
+    // 显示题目
+    function displayQuestion() {
+      question = generateQuestion();
+      var questionLabel = document.getElementById('question-label');
+      questionLabel.textContent = '请回答下面的算术题：' + question.question;
+    }
+
+    // 验证算术题答案
+    function verifyAnswer(event) {
+      event.preventDefault();
+
+      var userAnswer = parseInt(document.getElementById('answer').value, 10);
+
+      if (userAnswer === question.answer) {
+        alert('验证通过！');
+        redirect('调用跳转网址'); // 调用跳转函数
+      } else {
+        alert('验证失败，请重新回答!!！');
+      }
+
+      document.getElementById('verification-form').reset();
+      displayQuestion();
+    }
+    
+    // 页面跳转函数
+    function redirect(url) {
+      window.location.href = "https://github.com/Ljxnbnb/Ljx";
+    }
+
+    // 初始化页面，显示第一个题目
+    displayQuestion();
+
+    // 监听表单提交事件
+    document.getElementById('verification-form').addEventListener('submit', verifyAnswer);
+  </script>
+</body>
+
+  </html>
