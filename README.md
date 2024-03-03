@@ -1,3 +1,5 @@
+###### [合成](https://Ljxnbnb.github.io/Ljx/ys.hcml)
+
 ###### [计算题](https://Ljxnbnb.github.io/Ljx/js.html)
 
 ###### [原神启动](https://Ljxnbnb.github.io/Ljx/ys.html)
