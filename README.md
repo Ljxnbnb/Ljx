@@ -1,4 +1,4 @@
-###### [合成](https://Ljxnbnb.github.io/Ljx/ys.hcml)
+###### [合成](https://Ljxnbnb.github.io/Ljx/ys.html)
 
 ###### [计算题](https://Ljxnbnb.github.io/Ljx/js.html)
 
