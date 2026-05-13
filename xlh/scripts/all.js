@@ -4,6 +4,36 @@
  * @author dron
  * @site http://ucren.com
  */
+// 游戏原始分辨率
+const GAME_WIDTH = 640;
+const GAME_HEIGHT = 480;
+
+// 获取 Canvas 元素
+const canvas = document.getElementById('view');
+const ctx = canvas.getContext('2d');
+
+// 初始化 Canvas 逻辑尺寸（保持不变）
+canvas.width = GAME_WIDTH;
+canvas.height = GAME_HEIGHT;
+
+// 适配函数
+function resizeCanvas() {
+  const scale = Math.min(
+    window.innerWidth / GAME_WIDTH,
+    window.innerHeight / GAME_HEIGHT
+  );
+  
+  // 设置 Canvas 的 CSS 显示大小
+  canvas.style.width = `${GAME_WIDTH * scale}px`;
+  canvas.style.height = `${GAME_HEIGHT * scale}px`;
+}
+
+// 初始执行一次适配
+resizeCanvas();
+
+// 窗口大小变化时重新适配
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', resizeCanvas); // 适配横竖屏切换
 
 void function(global){
 	var mapping = {}, cache = {};
