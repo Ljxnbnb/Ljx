@@ -2,9 +2,15 @@
 {include ../../system/css/common.css}
 
 html, body{
-	width: 100%;
-	height: 100%;
-	background: #484848;
+	  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* 禁止页面滚动 */
+  background: #000; /* 黑边背景 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 body{
@@ -28,9 +34,13 @@ em{
 
 #view{
 	display: block;
-	background: transparent url(blank.gif) repeat 0 0;
-	cursor: default;
-	z-index: 20;
+  /* 核心：保持 640:480 的原始比例 */
+  max-width: 100vw;
+  max-height: 100vh;
+  width: auto;
+  height: auto;
+  /* 可选：加上一点抗锯齿优化 */
+  image-rendering: crisp-edges;
 }
 
 #extra{
@@ -84,3 +94,4 @@ em{
 	color: #fff;
 	font-weight: 700;
 }
+
