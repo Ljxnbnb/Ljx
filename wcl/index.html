@@ -1,31 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <!-- 关键：移动端视口适配，禁止缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="Keywords" content="">
     <meta name="Description" content="">
     <title>老婆别生气了嘛，不讨厌不讨厌</title>
 	<style type="text/css">
-		*{margin:0;padding:0;}
+		*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color: transparent;}
 		body{
 			background:#222;
-			perspective:800px;/*景深*/
+			perspective:800px;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
 		}
 		#wrap{
 			position:relative;
 			width:120px;
 			height:180px;
 			margin:auto;
-			transform-style:preserve-3d;/*设置3D环境*/
+			transform-style:preserve-3d;
+            -webkit-transform-style: preserve-3d;
 		}
 		#wrap img{
 			position:absolute;
 			width:133px;
 			height:200px;
 			box-shadow:0 0 10px #000;
-			/*倒影:朝向 偏移*/
 			-webkit-box-reflect:below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,.5) 100%);
-			border-radius:5px;/*圆角*/
+			border-radius:5px;
+            pointer-events: none;
+            -webkit-user-select: none;
 		}
 		#wrap p{
 			position:absolute;
@@ -38,33 +45,31 @@
 			border-radius:50%;
 			background:-webkit-radial-gradient(center center,600px 600px,rgba(122,122,122,0.2),rgba(0,0,0,0));
 			transform:rotateX(90deg);
+            -webkit-transform: rotateX(90deg);
 		}
-        /* 新增中间文字样式 */
+        /* 修复文字居中：放到body下全局居中，脱离3D容器干扰 */
         .center-text {
-            position: absolute;
-            /* 水平垂直居中 */
+            position: fixed;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            /* 文字样式自定义 */
+            -webkit-transform: translate(-50%, -50%);
             color: #fff;
-            font-size: 32px;
+            font-size: 26px;
             font-weight: bold;
             text-align: center;
             white-space: nowrap;
-            /* 层级最高，盖在图片上面 */
-            z-index: 999;
-            /* 关键：文字不跟随3D旋转，保持正面朝向屏幕 */
-            transform-style: flat;
+            z-index: 9999;
             text-shadow: 0 0 8px #ff6699, 0 0 12px #000;
+            pointer-events: none;
         }
 	</style>
 </head>
 <body>
-	<div id="wrap">
-        <!-- 新增中间文字标签，修改中间文字在这里 -->
-        <div class="center-text">老婆我错了<br>别生气了嘛<br>最喜欢你了</div>
+    <!-- 文字移出#wrap，放到body直接子元素，不受3D旋转影响 -->
+    <div class="center-text">老婆我错了<br>别生气了嘛<br>最喜欢你了</div>
 
+	<div id="wrap">
 		<img src="images/1.png" alt="" />
 		<img src="images/2.jpg" alt="" />
 		<img src="images/3.jpeg" alt="" />
@@ -82,67 +87,91 @@
 	<script type="text/javascript">
 		var oWrap = document.getElementById("wrap");
 		var aImg = oWrap.getElementsByTagName("img");
-		//让盒子自适应的垂直居中
+
+		// 垂直居中 兼容移动端vh
 		function mTop(){
-			//获取浏览器窗口可视区域的高度
-			var H = document.documentElement.clientHeight;
-			oWrap.style.marginTop = H/2 - 180 + "px"
+			var H = window.innerHeight || document.documentElement.clientHeight;
+			oWrap.style.marginTop = (H/2 - 180) + "px"
 		}
 		mTop();
 		window.onresize = mTop;
 
-		//图片初始动画
-		var len = aImg.length;//获取图片的个数
-		
-		var Deg = 360/len;//每一张图片所占的角度
+		// 图片环形3D布局
+		var len = aImg.length;
+		var Deg = 360/len;
 		for (var i=0;i<len;i++ )
 		{
 			aImg[i].style.transform = "rotateY("+i*Deg+"deg) translateZ(350px)";
+			aImg[i].style.webkitTransform = "rotateY("+i*Deg+"deg) translateZ(350px)";
 			aImg[i].style.transition = "1s "+(len-1-i)*0.1+"s";
 		}
-		//鼠标事件(按下 移动 抬起) 拖拽旋转
-		var lastX,lastY,nowX,nowY,minX,minY,roX=0,roY=0,timer;
-		document.onmousedown = function(ev){
-			clearInterval(timer);
-			var ev = ev||window.event;
-			//获取鼠标按下去的坐标位置
-			lastX = ev.clientX;
-			lastY = ev.clientY;
-			this.onmousemove = function(ev){
-				var ev = ev||window.event;
-				//移动过程中鼠标的坐标位置
-				nowX = ev.clientX;
-				nowY = ev.clientY;
-				//计算出鼠标坐标的差值
-				minX = nowX - lastX;
-				minY = nowY - lastY;
-				//计算容器旋转的角度
-				roY += minX*0.2;//roY = roY + minX*0.2
-				roX -= minY*0.1;
-				//console.log(roX,roY);
-				//让整个图片容器跟随鼠标动
-				oWrap.style.transform = "rotateX("+roX+"deg) rotateY("+roY+"deg)";
-				lastX = nowX;
-				lastY = nowY;
-			}
-			this.onmouseup = function(){
-				this.onmousemove = null;
-				this.onmouseup = null;
-				timer = setInterval(function(){
-					minX *=0.95;//让minX逐渐减小
-					minY *=0.95;
-					roY += minX*0.2;
-					roX -= minY*0.1;
-					oWrap.style.transform = "rotateX("+roX+"deg) rotateY("+roY+"deg)";
-					//当minX达到足够小的值时 清楚定时器
-					if (Math.abs(minX)<0.1 && Math.abs(minY)<0.1)
-					{
-						clearInterval(timer);
-					}
-				},1000/60);
-			}
-			return false;//阻止默认事件
-		}
+
+		// 公共旋转变量
+		var lastX,lastY,nowX,nowY,minX=0,minY=0,roX=0,roY=0,timer;
+
+        // ========== 兼容PC鼠标 + 手机触摸 ==========
+        // 统一获取坐标函数
+        function getPos(e){
+            if(e.touches && e.touches.length>0){
+                return {x:e.touches[0].clientX, y:e.touches[0].clientY}
+            }else{
+                return {x:e.clientX, y:e.clientY}
+            }
+        }
+
+        // 按下/触摸开始
+        function start(e){
+            // 仅触摸才阻止默认，鼠标不阻止，修复电脑鼠标失效
+            if(e.touches) e.preventDefault();
+            clearInterval(timer);
+            var pos = getPos(e);
+            lastX = pos.x;
+            lastY = pos.y;
+            minX = 0;
+            minY = 0;
+        }
+        // 移动
+        function move(e){
+            // 仅触摸才阻止默认，鼠标不阻止
+            if(e.touches) e.preventDefault();
+            var pos = getPos(e);
+            nowX = pos.x;
+            nowY = pos.y;
+            minX = nowX - lastX;
+            minY = nowY - lastY;
+            roY += minX*0.2;
+            roX -= minY*0.2;
+            oWrap.style.transform = "rotateX("+roX+"deg) rotateY("+roY+"deg)";
+            oWrap.style.webkitTransform = "rotateX("+roX+"deg) rotateY("+roY+"deg)";
+            lastX = nowX;
+            lastY = nowY;
+        }
+        // 抬起/触摸结束 惯性滑动
+        function end(){
+            timer = setInterval(function(){
+                minX *=0.95;
+                minY *=0.95;
+                roY += minX*0.2;
+                roX -= minY*0.2;
+                oWrap.style.transform = "rotateX("+roX+"deg) rotateY("+roY+"deg)";
+                oWrap.style.webkitTransform = "rotateX("+roX+"deg) rotateY("+roY+"deg)";
+                if (Math.abs(minX)<0.1 && Math.abs(minY)<0.1)
+                {
+                    clearInterval(timer);
+                }
+            },1000/60);
+        }
+
+        // PC鼠标事件
+		document.onmousedown = start;
+        document.onmousemove = move;
+        document.onmouseup = end;
+
+        // 手机触摸事件
+        document.addEventListener('touchstart', start, {passive:false});
+        document.addEventListener('touchmove', move, {passive:false});
+        document.addEventListener('touchend', end);
+        document.addEventListener('touchcancel', end);
 	</script>
 </body>
 </html>
